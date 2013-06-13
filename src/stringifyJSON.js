@@ -3,60 +3,31 @@
 
 // but you don't so you're going to have to write it from scratch:
 var stringifyJSON = function (obj) {
-	var string;
-	if ( Object.prototype.toString.call( obj ) === '[object Number]' ) {
-		string = obj + ',';
+  var result = '';  //set for empty obj
+// check for null, undefined, boolean, number or string
+	if( obj === null ) {
+		return 'null';
+	} else if ( obj === undefined ) {
+		return undefined;
+  } else if( obj === true || obj === false || typeof(obj) === 'number' ){
+		return obj.toString();
+  } else if( typeof(obj) === 'string' ) {
+		return '"' + obj + '"';
+// check for array
+  } else if( Array.isArray(obj) ) {
+		result = []; //reset to empty array (was empty object)
+		for(var i = 0; i < obj.length; i++) {
+			result.push(stringifyJSON(obj[i]));
+		}
+		return '[' + result + ']';
+// check for object
+		} else if(typeof obj === 'object'){
+		for(var key in obj){
+			if(stringifyJSON(obj[key]) !== undefined || null){
+				result += stringifyJSON(key) + ':' + stringifyJSON(obj[key]) + ',';
+			}
+		}
+// after all keys have been evaluated remove trailing comma
+		return '{' + result.slice(0, result.length - 1) + '}';
 	}
-	if ( Object.prototype.toString.call( obj ) === '[object String]' ) {
-		string = '"' + obj + '",';
-	}
-	if ( Object.prototype.toString.call( obj ) === '[object Array]' ) {
-		string = stringifyJSONarray(obj);
-	}
-	if ( Object.prototype.toString.call( obj ) === '[object Object]' ) {
-		string = stringifyJSONobj(obj);
-		string = string.substring(0, string.length - 1) + '},';
-	}
-	return string.substring(0, string.length - 1);
-};
-
-var stringifyJSONobj = function (obj) {
-	var string = '{';
-	for (var key in obj) {
-		string += '"' + key + '":';
-		if ( Object.prototype.toString.call( obj[key] ) === '[object Number]' ) {
-			string += obj[key] + ',';
-		}
-		if ( Object.prototype.toString.call( obj[key] ) === '[object String]' ) {
-			string += '"' + obj[key] + '",';
-		}
-		if ( Object.prototype.toString.call( obj[key] ) === '[object Array]' ) {
-			string += stringifyJSONarray(obj[key]);
-		}
-		if ( Object.prototype.toString.call( obj[key] ) === '[object Object]' ) {
-			string += stringifyJSONobj(obj[key]);
-			string = string.substring(0, string.length - 1) + '},';
-		}
-	}
-	return string.substring(0, string.length - 1) + '}';
-};
-
-var stringifyJSONarray = function (obj) {
-	var string = '[';
-	for (var i = 0; i < obj.length; i++) {
-		if ( Object.prototype.toString.call( obj[i] ) === '[object Number]' ) {
-			string += obj[i] + ',';
-		}
-		if ( Object.prototype.toString.call( obj[i] ) === '[object String]' ) {
-			string += '"' + obj[i] + '",';
-		}
-		if ( Object.prototype.toString.call( obj[i] ) === '[object Array]' ) {
-			string += stringifyJSONarray(obj[i]);
-		}
-		if ( Object.prototype.toString.call( obj[i] ) === '[object Object]' ) {
-			string += stringifyJSONobj(obj[i]);
-			string = string.substring(0, string.length - 1) + '},';
-		}
-	}
-	return string.substring(0, string.length - 1) + '],';
 };
