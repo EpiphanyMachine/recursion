@@ -3,5 +3,5 @@
 
 // but you're not, so you'll write it from scratch:
 var parseJSON = function (json) {
-  // your code goes here
+  return json.slice(0, json.length);
 };

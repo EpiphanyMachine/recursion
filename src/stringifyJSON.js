@@ -21,9 +21,10 @@ var stringifyJSON = function (obj) {
 		}
 		return '[' + result + ']';
 // check for object
-		} else if(typeof obj === 'object'){
-		for(var key in obj){
-			if(stringifyJSON(obj[key]) !== undefined || null){
+		} else if( typeof obj === 'object' ) {
+		for( var key in obj ) {
+			// if value is undefined or a function, skip that key
+			if( stringifyJSON(obj[key]) !== undefined || null ) {
 				result += stringifyJSON(key) + ':' + stringifyJSON(obj[key]) + ',';
 			}
 		}
